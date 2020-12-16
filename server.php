@@ -6,7 +6,48 @@ function getLastLines($string, $n = 1) {
 
 	        $lines = array_slice($lines, -$n);
 
-	        return implode("<br />", $lines);
+	        return $lines;
 }
 
-echo getLastLines($data, 5);
+$lines = getLastLines($data, 5);
+$data = [];
+foreach($lines as $row){
+	$data[] = explode(',', $row);
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body class="bg-dark">
+<div class="container">
+	<div class="row">
+		<h1>DHT-22</h1>
+	</div>
+	<div class="row">
+		<table class="table table-stripped table-bordered table-hover table-dark">
+		<thead class="bg-info">
+			<tr>
+				<td>Data</td>
+				<td>Godzina</td>
+				<td>Temperatura</td>
+				<td>Wilgotność</td>
+		</thead>
+		<tbody>
+			<?php foreach($data as $row):?>
+			<tr>
+				<td><?= $row[0]; ?></td>
+				<td><?= $row[1]; ?></td>
+				<td><?= (float) $row[2]; ?>°C</td>
+				<td><?= $row[3]; ?></td>
+			</tr>
+			<?php endforeach; ?>
+		</tbody>
+		</table>
+	</div>
+</div>
+</body>
+</html>
