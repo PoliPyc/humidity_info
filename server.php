@@ -10,9 +10,10 @@ function getLastLines($string, $n = 1) {
 }
 
 function set_trend_icon($trend) {
-	if($trend > 1) {
+	$trend = (int) $trend;
+	if($trend === 1) {
 		return '<i class="fas fa-long-arrow-alt-up text-success"></i>';
-	} elseif($trend < 1) {
+	} elseif($trend === -1) {
 		return '<i class="fas fa-long-arrow-alt-down text-danger"></i>';
 	}
 }
