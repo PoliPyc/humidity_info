@@ -21,7 +21,7 @@ foreach($lines as $row){
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body class="bg-dark">
@@ -30,13 +30,13 @@ foreach($lines as $row){
 		<h1>DHT-22</h1>
 	</div>
 	<div class="row">
-		<table class="table table-stripped table-bordered table-hover table-dark">
+		<table class="table table-striped table-bordered table-hover table-dark">
 		<thead class="bg-info">
 			<tr>
-				<td>Data</td>
-				<td>Godzina</td>
-				<td>Temperatura</td>
-				<td>Wilgotność</td>
+				<td class="col-3">Data</td>
+				<td class="col-3">Godzina</td>
+				<td class="col-3">Temp.</td>
+				<td class="col-3">Wilgotność</td>
 		</thead>
 		<tbody>
 			<?php foreach($data as $row):?>

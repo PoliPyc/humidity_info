@@ -13,14 +13,14 @@ def write_header_to_file():
     try:
         f = open(LOG_FILE, 'a+')
     #    if os.stat(LOG_FILE).st_size == 0
-        f.write('Date,Time,Temperature,Humidity\r\n')
+        f.write('Date,Time,Temperature,Humidity,Temperature trend, Humidity trend\r\n')
     except:
         pass
 
 def write_measure_to_file(data):
     print('writing to {}, t:{}, h:{}'.format(LOG_FILE, data['temperature'], data['humidity']))
     with open(LOG_FILE, 'a+') as file:
-        file.write('{0},{1},{2:0.1f}*C,{3:0.1f}%\r\n'.format(time.strftime('%m/%d/%y'), time.strftime('%H:%M'), data['temperature'], data['humidity']))
+        file.write('{0},{1},{2:0.1f}*C,{3:0.1f}%,{4},{5}\r\n'.format(time.strftime('%m/%d/%y'), time.strftime('%H:%M'), data['temperature'], data['humidity'], data['temperature_trend'], data['humidity_trend']))
         file.flush()
 
 def write_measure_to_database(data):
@@ -42,15 +42,42 @@ def read_data_from_dht():
     humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
     data = {
             'temperature': temperature,
-            'humidity': humidity
+            'humidity': humidity,
+            'temperature_trend': 0,
+            'humidity_trend': 0
     }
     return data
+
+def set_trends(prev_values, data):
+    if data['temperature'] > prev_values['temperature']:
+        data['temperature_trend'] = 1
+    elif data['temperature'] < prev_values['temperature']:
+        data['temperature_trend'] = -1
+    else:
+        data['temperature_trend'] = 0
+
+    if data['humidity'] > prev_values['humidity']:
+        data['humidity_trend'] = 1
+    elif data['humidity'] < prev_values['humidity']:
+        data['humidity_trend'] = -1
+    else:
+        data['humidity_trend'] = 0
+        
+    return data
+
+prev_values = {}
 
 while True:
     data = read_data_from_dht()
     if data['humidity'] is not None and data['temperature'] is not None:
+        if prev_values:
+            set_trends(prev_values, data)
         write_measure_to_file(data)
-        write_measure_to_database(data)
+        #write_measure_to_database(data)
+        prev_values = {
+                'humidity': data['humidity'],
+                'temperature': data['temperature']
+                }
     else:
         print("Failed to retrieve data from humidity sensor")
 
