@@ -9,11 +9,22 @@ function getLastLines($string, $n = 1) {
 	        return $lines;
 }
 
+function set_trend_icon($trend) {
+	if($trend > 1) {
+		return '<i class="glyphicon glyphicon-arrow-up" />';
+	} elseif($trend < 1) {
+		return '<i class="glyphicon glyphicon-arrow-down" />';
+	}
+}
+
 $lines = getLastLines($data, 15);
 $lines = array_reverse($lines);
 $data = [];
 foreach($lines as $row){
-	$data[] = explode(',', $row);
+	$row_data = explode(',', $row);
+	$row_data[6] = set_trend_icon($row_data[4]);
+	$row_data[7] = set_trend_icon($row_data[5]);
+	$data[] = $row_data;
 }
 ?>
 
@@ -34,7 +45,7 @@ foreach($lines as $row){
 		<thead class="bg-info">
 			<tr>
 				<td class="col-3">Data</td>
-				<td class="col-3">Godzina</td>
+				<td class="col-3">Czas</td>
 				<td class="col-3">Temp.</td>
 				<td class="col-3">Wilgotność</td>
 		</thead>
@@ -43,8 +54,8 @@ foreach($lines as $row){
 			<tr>
 				<td><?= $row[0]; ?></td>
 				<td><?= $row[1]; ?></td>
-				<td><?= (float) $row[2]; ?>°C</td>
-				<td><?= $row[3]; ?></td>
+				<td><?= (float) $row[2]; ?>°C <?= $row[6] ?></td>
+				<td><?= $row[3]; ?> <?= $row[7] ?></td>
 			</tr>
 			<?php endforeach; ?>
 		</tbody>
