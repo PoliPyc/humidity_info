@@ -20,7 +20,7 @@ def write_header_to_file():
 def write_measure_to_file(data):
     print('writing to {}, t:{}, h:{}'.format(LOG_FILE, data['temperature'], data['humidity']))
     with open(LOG_FILE, 'a+') as file:
-        file.write('{0},{1},{2:0.1f}*C,{3:0.1f}%,{4},{5}\r\n'.format(time.strftime('%m/%d/%y'), time.strftime('%H:%M'), data['temperature'], data['humidity'], data['temperature_trend'], data['humidity_trend']))
+        file.write('{0},{1},{2:0.1f}*C,{3}%,{4},{5}\r\n'.format(time.strftime('%m/%d/%y'), time.strftime('%H:%M'), data['temperature'], data['humidity'], data['temperature_trend'], data['humidity_trend']))
         file.flush()
 
 def write_measure_to_database(data):
@@ -70,6 +70,7 @@ prev_values = {}
 while True:
     data = read_data_from_dht()
     if data['humidity'] is not None and data['temperature'] is not None:
+        data['humidity'] = int(round(data['humidity'], 0))
         if prev_values:
             set_trends(prev_values, data)
         write_measure_to_file(data)
